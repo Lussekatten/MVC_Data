@@ -1,0 +1,36 @@
+﻿@model PeopleViewModel
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>@Model.PageTitle</title>
+</head>
+
+<body>
+    <form class="d-inline-flex" asp-controller="People" asp-action="Search" method="post">
+        <label for="SearchText">Sök (på namn eller stad): </label>
+        <input type="text" name="SearchText">
+        <button type="submit" class="btn btn-primary">Sök</button>
+    </form>
+    <hr />
+    <table class="table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>City</th>
+            <th>&nbsp;</th>
+        </tr>
+        @foreach (var item in Model.PeopleList)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.PhoneNumber</td>
+                <td>@item.City</td>
+                <td><a asp-action="RemovePerson" asp-route-id="@item.Id">Ta bort</a></td>
+            </tr>
+        }
+    </table>
+    <hr />
+    <partial name="~/Views/Shared/_AddPerson.cshtml" model="new Person()" />
+</body>
+</html>
