@@ -17,7 +17,7 @@ namespace EF_test_01.Controllers
         {
             _context = context;
         }
-        //public ApplicationDBContext db = new ApplicationDBContext();
+        
         public IActionResult ViewPeople()
         {
             List<Person> people = _context.People.ToList();

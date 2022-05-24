@@ -16,7 +16,7 @@ namespace EF_test_01.Models
             Name = name;
             PhoneNumber = phone;
             City = city;
-            FluentInLanguages = new List<Language>();
+            
         }
 
         [Key]
@@ -34,6 +34,6 @@ namespace EF_test_01.Models
         [Display(Name = "Stad")]
         public string City { get; set; }
 
-        public List<Language> FluentInLanguages { get; set; }
+        
     }
 }
