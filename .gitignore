@@ -7,8 +7,7 @@
 People1/
 People1Controller.cs
 OldPeopleController.cs
-Language.cs
-PersonLanguage.cs
+
 
 # User-specific files
 *.rsuser
