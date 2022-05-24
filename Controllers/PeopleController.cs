@@ -1,4 +1,5 @@
-﻿using EF_test_01.Models;
+﻿using EF_test_01.Data;
+using EF_test_01.Models;
 using EF_test_01.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,10 +11,19 @@ namespace EF_test_01.Controllers
 {
     public class PeopleController : Controller
     {
-        public static PeopleViewModel database = new PeopleViewModel();
+        private readonly ApplicationDBContext _context;
+
+        public PeopleController(ApplicationDBContext context)
+        {
+            _context = context;
+        }
+        //public ApplicationDBContext db = new ApplicationDBContext();
         public IActionResult ViewPeople()
-        {                   
-            return View(database);
+        {
+            List<Person> people = _context.People.ToList();
+            PeopleViewModel m = new PeopleViewModel();
+            m.PeopleList = people;
+            return View(m);
         }
 
 
@@ -22,42 +32,33 @@ namespace EF_test_01.Controllers
         {
             if (ModelState.IsValid)
             {
-                int lastId = database.PeopleList[database.PeopleList.Count - 1].Id;
-                Person newPerson = new Person(lastId+1, p.Name,p.PhoneNumber, p.City);
-                //Add the new person to the list
-                database.PeopleList.Add(newPerson);
-                return View("ViewPeople", database);
+                _context.People.Add(p);
+                _context.SaveChanges();
+
             }
-            else
-            {
-                //Remove failed. Just return the view
-                return View("ViewPeople", database);
-            }
+            return RedirectToAction(nameof(ViewPeople));
         }
 
+        [HttpPost]
         public IActionResult RemovePerson(int id)
         {
             //Logic
             if (ModelState.IsValid)
             {
-                //Remove element with 
-                var result = database.PeopleList.RemoveAll(x => x.Id == id);              
-                return View("ViewPeople", database);
+                var person = _context.People.Find(id);
+                _context.People.Remove(person);
+                _context.SaveChanges();
+                //return RedirectToAction(nameof(ViewPeople));
+            }
+            return RedirectToAction(nameof(ViewPeople));
         }
-            else
-            {
-                ModelState.Where(e => e.Value.Errors.Count > 0).ToList();
-                //Remove failed. Just return the view
-                return View("ViewPeople", database);
-    }
-}
 
         [HttpPost]
         public IActionResult Search(PeopleViewModel m)
         {
             if (!String.IsNullOrEmpty(m.SearchText))
             {
-                var result = database.PeopleList.Where(q => (q.Name + " " + q.City)
+                var result = _context.People.Where(q => (q.Name + " " + q.City)
                     .ToLower()
                     .Contains(m.SearchText.ToLower()))
                     .ToList();
@@ -70,8 +71,8 @@ namespace EF_test_01.Controllers
             }
             else
             {
-                //Do nothing
-                return View("ViewPeople", database);
+                //Redirect so that we read the full datalist
+                return RedirectToAction(nameof(ViewPeople));
             }
         }
     }

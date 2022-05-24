@@ -16,19 +16,24 @@ namespace EF_test_01.Models
             Name = name;
             PhoneNumber = phone;
             City = city;
+            //FluentInLanguages = new List<Language>();
         }
+
+        [Key]
         public int Id { get; set; }
 
-        [Display(Name = "Förnamn och eftrnamn: ")]
         [Required(ErrorMessage = "Du måste ange ett namn")]
+        [Display(Name = "Förnamn och eftrnamn: ")]
         public string Name { get; set; }
 
-        [Display(Name = "Telefon nr: ")]
         [Required(ErrorMessage = "Du måste ange ett telefon nummer")]
+        [Display(Name = "Telefon nr: ")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Du måste ange en stad")]
         [Display(Name = "Stad")]
         public string City { get; set; }
+
+        //public List<Language> FluentInLanguages { get; set; }
     }
 }

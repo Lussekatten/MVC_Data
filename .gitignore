@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# My own defined files for exclusion
+People1/
+People1Controller.cs
+OldPeopleController.cs
+Language.cs
+PersonLanguage.cs
+
 # User-specific files
 *.rsuser
 *.suo

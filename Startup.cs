@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using EF_test_01.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace EF_test_01
 {
@@ -15,15 +18,25 @@ namespace EF_test_01
     {
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        private readonly IConfiguration Configuration;
+
+        public Startup(IConfiguration config)
+        {
+            Configuration = config;
+        }
         public void ConfigureServices(IServiceCollection services)
         {
             //register services to be used
+            services.AddMvc();
             
-            //services.AddHttpContextAccessor();
+            services.AddHttpContextAccessor();
 
             //For session handling use the 2 services below
             services.AddDistributedMemoryCache();
             services.AddSession();
+            
+            services.AddDbContext<ApplicationDBContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllersWithViews();
         }
@@ -50,6 +63,8 @@ namespace EF_test_01
 
             //The order of middleware is important. Call UseSession after UseRouting and before UseEndpoints.
             app.UseSession();
+
+            
 
             // endpoint mapping
             app.UseEndpoints(endpoints => {
